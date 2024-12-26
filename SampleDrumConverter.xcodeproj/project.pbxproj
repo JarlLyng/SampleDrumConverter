@@ -24,9 +24,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3B469F172D1E18C2004E5EDE /* SampleDrumConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleDrumConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B469F282D1E18C4004E5EDE /* SampleDrumConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleDrumConverterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B469F322D1E18C4004E5EDE /* SampleDrumConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleDrumConverterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B469F172D1E18C2004E5EDE /* SampleDrumConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = SampleDrumConverter.app; path = /Users/jarllyng/Documents/GitHub/SampleDrumConverter/build/Debug/SampleDrumConverter.app; sourceTree = "<absolute>"; };
+		3B469F282D1E18C4004E5EDE /* SampleDrumConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = SampleDrumConverterTests.xctest; path = /Users/jarllyng/Documents/GitHub/SampleDrumConverter/build/Debug/SampleDrumConverter.app/Contents/PlugIns/SampleDrumConverterTests.xctest; sourceTree = "<absolute>"; };
+		3B469F322D1E18C4004E5EDE /* SampleDrumConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = SampleDrumConverterUITests.xctest; path = "/Users/jarllyng/Documents/GitHub/SampleDrumConverter/build/Debug/SampleDrumConverterUITests-Runner.app/Contents/PlugIns/SampleDrumConverterUITests.xctest"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -78,18 +78,7 @@
 				3B469F192D1E18C2004E5EDE /* SampleDrumConverter */,
 				3B469F2B2D1E18C4004E5EDE /* SampleDrumConverterTests */,
 				3B469F352D1E18C4004E5EDE /* SampleDrumConverterUITests */,
-				3B469F182D1E18C2004E5EDE /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		3B469F182D1E18C2004E5EDE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3B469F172D1E18C2004E5EDE /* SampleDrumConverter.app */,
-				3B469F282D1E18C4004E5EDE /* SampleDrumConverterTests.xctest */,
-				3B469F322D1E18C4004E5EDE /* SampleDrumConverterUITests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,7 +185,7 @@
 			mainGroup = 3B469F0E2D1E18C2004E5EDE;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 3B469F182D1E18C2004E5EDE /* Products */;
+			productRefGroup = 3B469F0E2D1E18C2004E5EDE;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
