@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3BDF761C2D1F6CA900189ABE /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3BDF761B2D1F6CA900189ABE /* AudioKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3B469F292D1E18C4004E5EDE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,9 +28,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3B469F172D1E18C2004E5EDE /* SampleDrumConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = SampleDrumConverter.app; path = /Users/jarllyng/Documents/GitHub/SampleDrumConverter/build/Debug/SampleDrumConverter.app; sourceTree = "<absolute>"; };
-		3B469F282D1E18C4004E5EDE /* SampleDrumConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = SampleDrumConverterTests.xctest; path = /Users/jarllyng/Documents/GitHub/SampleDrumConverter/build/Debug/SampleDrumConverter.app/Contents/PlugIns/SampleDrumConverterTests.xctest; sourceTree = "<absolute>"; };
-		3B469F322D1E18C4004E5EDE /* SampleDrumConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = SampleDrumConverterUITests.xctest; path = "/Users/jarllyng/Documents/GitHub/SampleDrumConverter/build/Debug/SampleDrumConverterUITests-Runner.app/Contents/PlugIns/SampleDrumConverterUITests.xctest"; sourceTree = "<absolute>"; };
+		3BDF76072D1F625D00189ABE /* SampleDrumConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleDrumConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BDF76082D1F625D00189ABE /* SampleDrumConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleDrumConverterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BDF76092D1F625D00189ABE /* SampleDrumConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleDrumConverterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BDF761C2D1F6CA900189ABE /* AudioKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,9 @@
 				3B469F192D1E18C2004E5EDE /* SampleDrumConverter */,
 				3B469F2B2D1E18C4004E5EDE /* SampleDrumConverterTests */,
 				3B469F352D1E18C4004E5EDE /* SampleDrumConverterUITests */,
+				3BDF76072D1F625D00189ABE /* SampleDrumConverter.app */,
+				3BDF76082D1F625D00189ABE /* SampleDrumConverterTests.xctest */,
+				3BDF76092D1F625D00189ABE /* SampleDrumConverterUITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -101,9 +109,10 @@
 			);
 			name = SampleDrumConverter;
 			packageProductDependencies = (
+				3BDF761B2D1F6CA900189ABE /* AudioKit */,
 			);
 			productName = SampleDrumConverter;
-			productReference = 3B469F172D1E18C2004E5EDE /* SampleDrumConverter.app */;
+			productReference = 3BDF76072D1F625D00189ABE /* SampleDrumConverter.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3B469F272D1E18C4004E5EDE /* SampleDrumConverterTests */ = {
@@ -126,7 +135,7 @@
 			packageProductDependencies = (
 			);
 			productName = SampleDrumConverterTests;
-			productReference = 3B469F282D1E18C4004E5EDE /* SampleDrumConverterTests.xctest */;
+			productReference = 3BDF76082D1F625D00189ABE /* SampleDrumConverterTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		3B469F312D1E18C4004E5EDE /* SampleDrumConverterUITests */ = {
@@ -149,7 +158,7 @@
 			packageProductDependencies = (
 			);
 			productName = SampleDrumConverterUITests;
-			productReference = 3B469F322D1E18C4004E5EDE /* SampleDrumConverterUITests.xctest */;
+			productReference = 3BDF76092D1F625D00189ABE /* SampleDrumConverterUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -184,6 +193,9 @@
 			);
 			mainGroup = 3B469F0E2D1E18C2004E5EDE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3BDF761A2D1F6B9500189ABE /* XCRemoteSwiftPackageReference "AudioKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3B469F0E2D1E18C2004E5EDE;
 			projectDirPath = "";
@@ -538,6 +550,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3BDF761A2D1F6B9500189ABE /* XCRemoteSwiftPackageReference "AudioKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/AudioKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3BDF761B2D1F6CA900189ABE /* AudioKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3BDF761A2D1F6B9500189ABE /* XCRemoteSwiftPackageReference "AudioKit" */;
+			productName = AudioKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3B469F0F2D1E18C2004E5EDE /* Project object */;
 }

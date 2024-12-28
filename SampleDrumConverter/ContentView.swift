@@ -1,6 +1,6 @@
 import SwiftUI
+import AudioKit
 import AVFoundation
-import UniformTypeIdentifiers
 
 struct ContentView: View {
     @State private var inputURL: URL? = nil
@@ -50,6 +50,19 @@ struct ContentView: View {
             .disabled(inputURL == nil || isProcessing)
             .padding(.horizontal)
 
+            Button(action: {
+                testOutput()
+            }) {
+                Label("Test lydoutput", systemImage: "speaker.wave.2.fill")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.orange)
+                    .cornerRadius(10)
+            }
+            .padding(.horizontal)
+
             Spacer()
         }
         .padding()
@@ -75,14 +88,14 @@ struct ContentView: View {
         panel.nameFieldStringValue = suggestedFileName
 
         if panel.runModal() == .OK, let outputURL = panel.url {
-            convertToMono48kHz16Bit(inputURL: inputURL, outputURL: outputURL)
+            convertWithAudioKit(inputURL: inputURL, outputURL: outputURL)
         } else {
             statusMessage = "Bruger annullerede gemning."
         }
     }
 
-    func convertToMono48kHz16Bit(inputURL: URL, outputURL: URL) {
-        if isProcessing {
+    func convertWithAudioKit(inputURL: URL, outputURL: URL) {
+        guard !isProcessing else {
             statusMessage = "En konvertering er allerede i gang."
             return
         }
@@ -92,65 +105,86 @@ struct ContentView: View {
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
+                print("Læser inputfil: \(inputURL.path)")
                 let inputFile = try AVAudioFile(forReading: inputURL)
                 let inputFormat = inputFile.processingFormat
+                print("Inputfil format: \(inputFormat)")
 
-                guard inputFormat.sampleRate == 44100, inputFormat.channelCount == 2 else {
+                let engine = AudioEngine()
+                guard let player = AudioPlayer(file: inputFile) else {
                     DispatchQueue.main.async {
-                        self.statusMessage = "Inputfil skal være stereo og 44.1kHz."
+                        self.statusMessage = "Fejl: Kunne ikke initialisere AudioPlayer."
                         self.isProcessing = false
                     }
                     return
                 }
 
-                if FileManager.default.fileExists(atPath: outputURL.path) {
-                    try FileManager.default.removeItem(atPath: outputURL.path)
-                }
+                print("AudioPlayer initialiseret.")
 
-                let mixerFormat = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 1, interleaved: true)!
-                let outputFile = try AVAudioFile(forWriting: outputURL, settings: mixerFormat.settings)
+                let mixer = Mixer(player)
+                mixer.volume = 1.0
+                mixer.pan = 0.0 // Sørger for mono-output
+                engine.output = mixer
 
-                let engine = AVAudioEngine()
-                let player = AVAudioPlayerNode()
-                let mixer = AVAudioMixerNode()
-
-                engine.attach(player)
-                engine.attach(mixer)
-                engine.connect(player, to: mixer, format: inputFormat)
-                engine.connect(mixer, to: engine.mainMixerNode, format: mixerFormat)
-
-                mixer.installTap(onBus: 0, bufferSize: 8192, format: mixer.outputFormat(forBus: 0)) { buffer, _ in
-                    do {
-                        if buffer.frameLength > 0 {
-                            try outputFile.write(from: buffer)
-                        }
-                    } catch {
-                        DispatchQueue.main.async {
-                            self.statusMessage = "Fejl ved skrivning: \(error.localizedDescription)"
-                            self.isProcessing = false
-                        }
-                        engine.stop()
-                        mixer.removeTap(onBus: 0)
-                        return
-                    }
-                }
-
-                try engine.start()
-                player.scheduleFile(inputFile, at: nil) {
+                do {
+                    try engine.start()
+                    print("Motoren er startet.")
+                } catch {
                     DispatchQueue.main.async {
-                        self.statusMessage = "Konvertering fuldført! Fil gemt som \(outputURL.lastPathComponent)."
+                        self.statusMessage = "Fejl: Kunne ikke starte motoren: \(error.localizedDescription)"
                         self.isProcessing = false
                     }
-                    engine.stop()
-                    mixer.removeTap(onBus: 0)
+                    return
                 }
 
-                player.play()
-            } catch {
+                player.start(at: nil)
+                print("Afspiller kører: \(player.isPlaying)")
+
+                let format = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 1, interleaved: true)!
+                let duration = Double(inputFile.length) / inputFormat.sampleRate
+                print("Varighed af inputfil: \(duration) sekunder.")
+
+                let outputFile = try AVAudioFile(forWriting: outputURL, settings: format.settings)
+                print("Outputfil oprettet: \(outputURL.path)")
+
+                try engine.renderToFile(outputFile, duration: duration)
+                print("Render fuldført.")
+
+                player.stop()
+                engine.stop()
+                print("Motoren stoppet.")
+
                 DispatchQueue.main.async {
-                    self.statusMessage = "Fejl: \(error.localizedDescription)"
+                    self.statusMessage = "Konvertering fuldført! Fil gemt som \(outputURL.lastPathComponent)."
                     self.isProcessing = false
                 }
+            } catch {
+                DispatchQueue.main.async {
+                    self.statusMessage = "Fejl under konvertering: \(error.localizedDescription)"
+                    self.isProcessing = false
+                }
+            }
+        }
+    }
+
+    func testOutput() {
+        do {
+            let engine = AudioEngine()
+            let sineWave = PlaygroundOscillator()
+            engine.output = sineWave
+
+            try engine.start()
+            print("Motoren startet til testlyd.")
+            sineWave.start()
+            print("Testlyd spiller.")
+            sleep(2)
+            sineWave.stop()
+            engine.stop()
+            print("Testlyd stoppet.")
+        } catch {
+            print("Fejl under testlyd: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                self.statusMessage = "Fejl under testlyd: \(error.localizedDescription)"
             }
         }
     }
