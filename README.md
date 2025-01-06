@@ -1,6 +1,8 @@
 # SampleDrumConverter
 
-A professional macOS application for batch converting WAV audio files to mono format while preserving original sample rates.
+A macOS application for batch converting WAV audio files to mono format while preserving original sample rates.
+
+I made this because I wanted to convert a bunch of drum samples to mono format for a project with Erica SYnths 'Sample Drum' module, which only supports mono.
 
 ## Features
 
@@ -45,7 +47,7 @@ The app will maintain the original sample rate while converting to mono format.
 
 ## License
 
-[Your chosen license]
+MIT
 
 ## Contributing
 
