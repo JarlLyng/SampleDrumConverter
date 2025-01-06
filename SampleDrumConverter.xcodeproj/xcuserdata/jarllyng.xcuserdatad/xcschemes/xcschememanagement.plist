@@ -4,10 +4,33 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>AudioKit (Playground).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>SampleDrumConverter.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>3B469F162D1E18C2004E5EDE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3B469F272D1E18C4004E5EDE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3B469F312D1E18C4004E5EDE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

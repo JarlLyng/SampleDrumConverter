@@ -57,6 +57,17 @@ struct AudioFileFormat: Sendable {
     }
 }
 
+func validateFile(at url: URL) throws {
+    // Check file size
+    let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+    let fileSize = attributes[.size] as? Int64 ?? 0
+    let maxSize: Int64 = 100 * 1024 * 1024 // 100 MB
+    
+    if fileSize > maxSize {
+        throw ConversionError.fileSizeTooLarge
+    }
+}
+
 struct ContentView: View {
     @State private var audioFiles: [AudioFile] = []
     @State private var isProcessing = false
@@ -64,6 +75,7 @@ struct ContentView: View {
     @State private var customStatusMessage: String?
     
     private let maxFiles = 50
+    private let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     
     private var statusMessage: String {
         if let custom = customStatusMessage {
@@ -219,8 +231,14 @@ struct ContentView: View {
         panel.canChooseDirectories = false
         
         if panel.runModal() == .OK {
-            let newFiles = panel.urls.map { url in
-                AudioFile(url: url, format: getAudioFormat(for: url))
+            let newFiles = panel.urls.compactMap { url -> AudioFile? in
+                do {
+                    try validateFile(at: url)
+                    return AudioFile(url: url, format: getAudioFormat(for: url))
+                } catch {
+                    setStatusMessage("Skipped file \(url.lastPathComponent): \(error.localizedDescription)")
+                    return nil
+                }
             }
             
             // Check for max files limit
@@ -337,6 +355,12 @@ struct ContentView: View {
             setStatusMessage("Maximum number of files (\(maxFiles)) reached")
         }
     }
+
+    private func log(_ message: String) {
+        #if DEBUG
+        print("[\(Date())] \(message)")
+        #endif
+    }
 }
 
 // FileRowView til at vise individuelle filer
@@ -391,18 +415,20 @@ struct FileRowView: View {
 }
 
 func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (Float) -> Void) throws {
+    // Validate file first
+    try validateFile(at: inputURL)
+    
     var inputFile: ExtAudioFileRef?
     var outputFile: ExtAudioFileRef?
     
-    // Åbn input fil
+    // Open input file
     guard ExtAudioFileOpenURL(inputURL as CFURL, &inputFile) == noErr,
           let inputFile = inputFile else {
-        throw NSError(domain: "Conversion", code: -1,
-                     userInfo: [NSLocalizedDescriptionKey: "Could not open input file"])
+        throw ConversionError.inputFileOpenFailed
     }
     defer { ExtAudioFileDispose(inputFile) }
     
-    // Få input format
+    // Get input format
     var inputFormat = AudioStreamBasicDescription()
     var propSize = UInt32(MemoryLayout<AudioStreamBasicDescription>.stride)
     guard ExtAudioFileGetProperty(inputFile,
@@ -413,7 +439,7 @@ func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (
                      userInfo: [NSLocalizedDescriptionKey: "Could not get input format"])
     }
     
-    // Sæt output format (mono, samme sample rate som input, 16-bit)
+    // Set output format (mono, same sample rate as input, 16-bit)
     var outputFormat = AudioStreamBasicDescription(
         mSampleRate: inputFormat.mSampleRate,
         mFormatID: kAudioFormatLinearPCM,
@@ -426,7 +452,7 @@ func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (
         mReserved: 0
     )
     
-    // Opret output fil
+    // Create output file
     guard ExtAudioFileCreateWithURL(
         outputURL as CFURL,
         kAudioFileWAVEType,
@@ -441,7 +467,7 @@ func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (
     }
     defer { ExtAudioFileDispose(outputFile) }
     
-    // Sæt client format på input fil til float for bedre kvalitet
+    // Set client format on input file to float for better quality
     var clientFormat = AudioStreamBasicDescription(
         mSampleRate: inputFormat.mSampleRate,
         mFormatID: kAudioFormatLinearPCM,
@@ -462,7 +488,7 @@ func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (
                      userInfo: [NSLocalizedDescriptionKey: "Could not set client format"])
     }
     
-    // Sæt client format på output fil
+    // Set client format on output file
     guard ExtAudioFileSetProperty(outputFile,
                                 kExtAudioFileProperty_ClientDataFormat,
                                 UInt32(MemoryLayout<AudioStreamBasicDescription>.stride),
@@ -471,7 +497,7 @@ func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (
                      userInfo: [NSLocalizedDescriptionKey: "Could not set output client format"])
     }
     
-    // Få total antal frames
+    // Get total number of frames
     var fileLengthFrames: Int64 = 0
     propSize = UInt32(MemoryLayout<Int64>.stride)
     guard ExtAudioFileGetProperty(inputFile,
@@ -482,7 +508,7 @@ func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (
                      userInfo: [NSLocalizedDescriptionKey: "Could not get file length"])
     }
     
-    // Konverter i chunks
+    // Convert in chunks
     let bufferSize: UInt32 = 32768
     let channelCount = Int(clientFormat.mChannelsPerFrame)
     let buffer = UnsafeMutablePointer<Float>.allocate(capacity: Int(bufferSize) * channelCount)
@@ -507,7 +533,7 @@ func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (
             )
         )
         
-        // Læs frames
+        // Read frames
         guard ExtAudioFileRead(inputFile, &frameCount, &inputBufferList) == noErr else {
             throw NSError(domain: "Conversion", code: -1,
                          userInfo: [NSLocalizedDescriptionKey: "Could not read frames"])
@@ -515,19 +541,19 @@ func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (
         
         if frameCount == 0 { break }
         
-        // Konverter til mono ved at tage gennemsnittet af kanalerne
+        // Convert to mono by averaging the channels
         let floatBuffer = UnsafeBufferPointer(start: buffer, count: Int(frameCount) * channelCount)
         for frame in 0..<Int(frameCount) {
             var sum: Float = 0
             for channel in 0..<channelCount {
                 sum += floatBuffer[frame * channelCount + channel]
             }
-            // Konverter float til int16 og normaliser
+            // Convert float to int16 and normalize
             let avg = sum / Float(channelCount)
             monoBuffer[frame] = Int16(max(-1, min(1, avg)) * 32767.0)
         }
         
-        // Skriv mono data
+        // Write mono data
         var outputBufferList = AudioBufferList(
             mNumberBuffers: 1,
             mBuffers: AudioBuffer(
@@ -544,5 +570,37 @@ func convertAudioFile(inputURL: URL, outputURL: URL, updateProgress: @escaping (
         
         currentFrame += Int64(frameCount)
         updateProgress(Float(currentFrame) / Float(fileLengthFrames))
+    }
+}
+
+enum ConversionError: LocalizedError {
+    case inputFileOpenFailed
+    case outputFileCreateFailed
+    case inputFormatReadFailed
+    case clientFormatSetFailed
+    case fileLengthReadFailed
+    case readFramesFailed
+    case writeFramesFailed
+    case fileSizeTooLarge
+    
+    var errorDescription: String? {
+        switch self {
+        case .inputFileOpenFailed:
+            return "Could not open input file. Please ensure it's a valid WAV file."
+        case .outputFileCreateFailed:
+            return "Could not create output file. Please check disk space and permissions."
+        case .inputFormatReadFailed:
+            return "Could not read input file format. File may be corrupted."
+        case .clientFormatSetFailed:
+            return "Could not set audio processing format. Please try again."
+        case .fileLengthReadFailed:
+            return "Could not determine file length. File may be corrupted."
+        case .readFramesFailed:
+            return "Error reading audio data. File may be corrupted."
+        case .writeFramesFailed:
+            return "Error writing audio data. Please check disk space."
+        case .fileSizeTooLarge:
+            return "File size exceeds maximum limit of 100 MB."
+        }
     }
 }

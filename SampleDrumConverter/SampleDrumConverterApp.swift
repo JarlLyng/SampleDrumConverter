@@ -12,6 +12,7 @@ struct SampleDrumConverterApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .navigationTitle("It's mono, yo!")
         }
     }
 }
