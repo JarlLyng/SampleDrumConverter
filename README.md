@@ -1,76 +1,51 @@
-Her er en engelsk version af din README.md:
-
-README.md Example
-
 # SampleDrumConverter
 
-SampleDrumConverter is a macOS app designed to convert WAV audio files into the following format:
-- **Mono**
-- **48 kHz**
-- **16-bit resolution**
+A simple macOS application for converting WAV audio files to a standardized format commonly used in drum sample libraries.
 
-This app is perfect for musicians and audio engineers who need standardized audio files for their projects.
+## Features
 
----
+- Converts WAV files to:
+  - Mono (single channel)
+  - 48 kHz sample rate
+  - 16-bit resolution
+- Simple drag-and-drop interface
+- Progress indicator during conversion
+- Audio output test function
+- Support for files up to 100 MB
 
-## 🚀 Features
-- Select a WAV file from your computer.
-- Automatically convert the file to mono, 48 kHz, and 16-bit resolution.
-- Save the converted file in the same directory as the input file.
+## Usage
 
----
+1. Launch the application
+2. Click "Select input WAV file" to choose your source audio file
+3. Click "Convert to mono, 48kHz, 16-bit WAV" to start the conversion
+4. Choose where to save the converted file
+5. Wait for the conversion to complete
 
-## 🛠️ Installation
-### Requirements
-- macOS 12 or later.
+The converted file will maintain the original filename with "Mono" added to indicate the conversion.
 
-### How to Download the App
-1. Download the latest version from the [Releases](https://github.com/yourusername/SampleDrumConverter/releases) page.
-2. Open the `.app` file to start the application.
+## Technical Details
 
----
+The application uses:
+- AudioKit for audio processing
+- ExtAudioFile API for high-quality audio conversion
+- SwiftUI for the user interface
 
-## 📖 How to Use
-1. Launch the app.
-2. Click **"Select Input WAV File"** to choose a file.
-3. Click **"Convert to Mono, 48kHz, 16-bit WAV"** to start the conversion.
-4. The converted file will be saved in the same folder as the original file with the name `filename_converted.wav`.
+## Requirements
 
----
+- macOS 11.0 or later
+- Audio files in WAV format
+- Maximum file size: 100 MB
 
-## 🔧 Development
-If you want to build the project yourself:
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/yourusername/SampleDrumConverter.git
+## Building from Source
 
-	2.	Open the project in Xcode:
+1. Clone the repository
+2. Open the project in Xcode
+3. Build and run
 
-open SampleDrumConverter.xcodeproj
+## License
 
+[Your chosen license]
 
-	3.	Build and run the project by clicking the Play button in Xcode.
+## Contributing
 
-🛑 Known Issues
-	•	Only WAV files are supported as input. Make sure your files have the correct .wav extension.
-
-💡 Contributions
-
-Have an idea or want to contribute? Open an issue or submit a pull request. Contributions are always welcome!
-
-📄 License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-🖼️ Screenshots
-
----
-
-### **How to Use This README**
-1. Replace `yourusername` with your GitHub username.
-2. Add a screenshot of the app if you'd like (you can use `Command + Shift + 4` to take one on macOS).
-3. Push the `README.md` file to your GitHub repository.
-
----
-
-Let me know if you'd like further tweaks to this README or help with adding screenshots! 😊
+Contributions are welcome! Please feel free to submit a Pull Request.
