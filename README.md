@@ -1,40 +1,41 @@
 # SampleDrumConverter
 
-A simple macOS application for converting WAV audio files to a standardized format commonly used in drum sample libraries.
+A professional macOS application for batch converting WAV audio files to mono format while preserving original sample rates.
 
 ## Features
 
-- Converts WAV files to:
-  - Mono (single channel)
-  - 48 kHz sample rate
-  - 16-bit resolution
-- Simple drag-and-drop interface
-- Progress indicator during conversion
-- Audio output test function
-- Support for files up to 100 MB
+- Batch conversion of multiple files
+- Preserves original sample rate
+- Progress tracking for each file
+- Error handling with retry option
+- Keyboard shortcuts for common actions
+- Context menu actions for individual files
+- Direct access to converted files in Finder
 
 ## Usage
 
-1. Launch the application
-2. Click "Select input WAV file" to choose your source audio file
-3. Click "Convert to mono, 48kHz, 16-bit WAV" to start the conversion
-4. Choose where to save the converted file
-5. Wait for the conversion to complete
+1. Add WAV files by:
+   - Using the "Add WAV Files" button (⌘O)
+   - Selecting multiple files in the file picker
 
-The converted file will maintain the original filename with "Mono" added to indicate the conversion.
+2. Select output folder (⌘F)
+3. Click "Convert to Mono" (⌘↩) to start conversion
 
-## Technical Details
+The app will maintain the original sample rate while converting to mono format.
 
-The application uses:
-- AudioKit for audio processing
-- ExtAudioFile API for high-quality audio conversion
-- SwiftUI for the user interface
+## Keyboard Shortcuts
+
+- ⌘O: Add WAV files
+- ⌘F: Select output folder
+- ⌘↩: Start conversion
+- ⌫: Remove selected file
 
 ## Requirements
 
 - macOS 11.0 or later
 - Audio files in WAV format
-- Maximum file size: 100 MB
+- Maximum file size: 100 MB per file
+- Up to 50 files can be converted in one batch
 
 ## Building from Source
 
