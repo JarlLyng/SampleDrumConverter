@@ -68,7 +68,44 @@ func validateFile(at url: URL) throws {
     }
 }
 
+func getAudioFormat(for url: URL) -> AudioFileFormat? {
+    guard let file = try? AVAudioFile(forReading: url) else { return nil }
+    let format = file.processingFormat
+    
+    return AudioFileFormat(
+        channels: Int(format.channelCount),
+        sampleRate: format.sampleRate,
+        bitDepth: Int(format.streamDescription.pointee.mBitsPerChannel)
+    )
+}
+
+enum ConversionStep {
+    case selectFiles
+    case selectOutput
+    case convert
+    case completed
+    
+    var title: String {
+        switch self {
+        case .selectFiles: return "Select Files"
+        case .selectOutput: return "Select Output"
+        case .convert: return "Convert"
+        case .completed: return "Completed"
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .selectFiles: return "plus.rectangle.fill"
+        case .selectOutput: return "folder.fill"
+        case .convert: return "waveform.circle.fill"
+        case .completed: return "checkmark.circle.fill"
+        }
+    }
+}
+
 struct ContentView: View {
+    @State private var currentStep = ConversionStep.selectFiles
     @State private var audioFiles: [AudioFile] = []
     @State private var isProcessing = false
     @State private var outputFolder: URL?
@@ -109,104 +146,71 @@ struct ContentView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Toolbar area with status
-            HStack {
-                Text(statusMessage)
-                    .foregroundColor(statusMessage.contains("Error") ? .red : .secondary)
-                Spacer()
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-            .background(Color(.textBackgroundColor))
+        ZStack {
+            // Background
+            Color.black.ignoresSafeArea()
             
-            // Main content
-            List {
-                if audioFiles.isEmpty {
-                    VStack(spacing: 20) {
-                        Image(systemName: "doc.badge.plus")
-                            .font(.system(size: 40))
-                            .foregroundColor(.secondary)
-                        Text("Click 'Add WAV Files' to select files for conversion")
-                            .foregroundColor(.secondary)
-                        Button("Select Files...") {
-                            selectFiles()
-                        }
-                        .buttonStyle(.borderedProminent)
+            VStack(spacing: 20) {
+                // Progress indicators
+                HStack(spacing: 15) {
+                    ForEach([ConversionStep.selectFiles, .selectOutput, .convert, .completed], id: \.self) { step in
+                        Circle()
+                            .fill(currentStep == step ? Color.white : Color.gray)
+                            .frame(width: 10, height: 10)
+                            .animation(.easeInOut(duration: 0.3), value: currentStep)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .listRowBackground(Color.clear)
-                } else {
-                    ForEach(audioFiles) { file in
-                        FileRowView(file: file)
-                    }
-                    .onDelete(perform: removeFiles)
                 }
-            }
-            .listStyle(.inset)
-            
-            // Status bar
-            HStack {
-                if let outputFolder = outputFolder {
-                    Label("Output: \(outputFolder.lastPathComponent)", systemImage: "folder")
-                        .onTapGesture {
-                            NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: outputFolder.path)
-                        }
-                } else {
-                    Label("Click 'Select Output Folder' to choose destination", systemImage: "folder.badge.questionmark")
-                        .foregroundColor(.secondary)
-                }
-                Spacer()
-                if !audioFiles.isEmpty {
-                    Text("\(audioFiles.count) files • \(formatFileSize(totalFileSize))")
-                }
-            }
-            .font(.system(size: 11))
-            .padding(6)
-            .background(Color(.windowBackgroundColor))
-        }
-        .toolbar {
-            ToolbarItemGroup(placement: .automatic) {
-                Button(action: selectFiles) {
-                    Label("Add WAV Files", systemImage: "doc.badge.plus")
-                }
-                .help("Add WAV files for conversion")
-                .keyboardShortcut("o", modifiers: .command)
+                .padding(.top)
                 
-                Button(action: selectOutputFolder) {
-                    Label("Select Output Folder", systemImage: "folder.badge.plus")
+                // Current step content
+                switch currentStep {
+                case .selectFiles:
+                    SelectFilesView(
+                        audioFiles: $audioFiles,
+                        onNext: { withAnimation(.easeInOut) { currentStep = .selectOutput } }
+                    )
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing),
+                        removal: .move(edge: .leading)
+                    ))
+                case .selectOutput:
+                    SelectOutputView(
+                        outputFolder: $outputFolder,
+                        onBack: { withAnimation(.easeInOut) { currentStep = .selectFiles } },
+                        onNext: { withAnimation(.easeInOut) { currentStep = .convert } }
+                    )
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing),
+                        removal: .move(edge: .leading)
+                    ))
+                case .convert:
+                    ConvertView(
+                        audioFiles: $audioFiles,
+                        currentStep: $currentStep,
+                        outputFolder: outputFolder,
+                        onBack: { withAnimation(.easeInOut) { currentStep = .selectOutput } }
+                    )
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing),
+                        removal: .move(edge: .leading)
+                    ))
+                case .completed:
+                    CompletionView(
+                        audioFiles: audioFiles,
+                        outputFolder: outputFolder,
+                        onStartOver: { 
+                            withAnimation(.easeInOut) { 
+                                currentStep = .selectFiles
+                                audioFiles.removeAll()
+                            }
+                        }
+                    )
+                    .transition(.scale.combined(with: .opacity))
                 }
-                .help("Choose where to save converted files")
-                .keyboardShortcut("f", modifiers: .command)
-                
-                Button(action: clearFiles) {
-                    Label("Clear List", systemImage: "trash")
-                }
-                .help("Remove all files from list")
-                .disabled(audioFiles.isEmpty)
             }
-            
-            ToolbarItemGroup(placement: .primaryAction) {
-                Button(action: startConversion) {
-                    Label("Convert to Mono", systemImage: "waveform")
-                }
-                .help("Convert selected files to mono")
-                .disabled(isProcessing || outputFolder == nil || audioFiles.isEmpty)
-                .keyboardShortcut(.return, modifiers: .command)
-            }
-            
-            if let outputFolder = outputFolder, 
-               audioFiles.contains(where: { $0.status == .completed }) {
-                ToolbarItemGroup(placement: .automatic) {
-                    Button(action: {
-                        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: outputFolder.path)
-                    }) {
-                        Label("Show Converted Files", systemImage: "folder")
-                    }
-                }
-            }
+            .foregroundColor(.white)
+            .animation(.easeInOut, value: currentStep)
         }
-        .frame(minWidth: 600, minHeight: 400)
     }
 
     private func formatFileSize(_ size: Int64) -> String {
@@ -329,17 +333,6 @@ struct ContentView: View {
                 }
             }
         }
-    }
-    
-    private func getAudioFormat(for url: URL) -> AudioFileFormat? {
-        guard let file = try? AVAudioFile(forReading: url) else { return nil }
-        let format = file.processingFormat
-        
-        return AudioFileFormat(
-            channels: Int(format.channelCount),
-            sampleRate: format.sampleRate,
-            bitDepth: Int(format.streamDescription.pointee.mBitsPerChannel)
-        )
     }
     
     private func setStatusMessage(_ message: String) {
@@ -602,5 +595,382 @@ enum ConversionError: LocalizedError {
         case .fileSizeTooLarge:
             return "File size exceeds maximum limit of 100 MB."
         }
+    }
+}
+
+struct SelectFilesView: View {
+    @Binding var audioFiles: [AudioFile]
+    let onNext: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            // Title
+            Text("Select WAV Files")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            // Icon and drop zone
+            VStack(spacing: 20) {
+                Image(systemName: "plus.rectangle.fill")
+                    .font(.system(size: 40, weight: .ultraLight))
+                
+                Text("Click to select WAV files\nor drag files here")
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.gray)
+            }
+            .frame(maxWidth: .infinity, maxHeight: 200)
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(12)
+            .onTapGesture(perform: selectFiles)
+            
+            // Selected files list
+            if !audioFiles.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Selected Files:")
+                        .fontWeight(.medium)
+                    
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 4) {
+                            ForEach(audioFiles) { file in
+                                HStack {
+                                    Text(file.url.lastPathComponent)
+                                    Spacer()
+                                    if let format = file.format {
+                                        Text(format.description)
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+                    }
+                    .frame(maxHeight: 200)
+                }
+                .padding()
+                .background(Color.white.opacity(0.05))
+                .cornerRadius(12)
+            }
+            
+            // Next button
+            Button(action: onNext) {
+                Text("Next")
+                    .fontWeight(.medium)
+                    .frame(width: 100)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.white)
+            .disabled(audioFiles.isEmpty)
+            
+            Spacer()
+        }
+        .padding()
+    }
+    
+    private func selectFiles() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.wav]
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = false
+        
+        if panel.runModal() == .OK {
+            let newFiles = panel.urls.compactMap { url -> AudioFile? in
+                do {
+                    try validateFile(at: url)
+                    return AudioFile(url: url, format: getAudioFormat(for: url))
+                } catch {
+                    // Show error in UI
+                    return nil
+                }
+            }
+            audioFiles.append(contentsOf: newFiles)
+        }
+    }
+}
+
+struct SelectOutputView: View {
+    @Binding var outputFolder: URL?
+    let onBack: () -> Void
+    let onNext: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            // Title
+            Text("Select Output Folder")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            // Icon and select area
+            VStack(spacing: 20) {
+                Image(systemName: "folder.fill")
+                    .font(.system(size: 40, weight: .ultraLight))
+                
+                if let folder = outputFolder {
+                    VStack(spacing: 8) {
+                        Text("Selected Folder:")
+                            .fontWeight(.medium)
+                        Text(folder.lastPathComponent)
+                            .foregroundColor(.gray)
+                    }
+                } else {
+                    Text("Click to select output folder")
+                        .foregroundColor(.gray)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: 200)
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(12)
+            .onTapGesture(perform: selectOutputFolder)
+            
+            // Navigation buttons
+            HStack(spacing: 20) {
+                Button(action: onBack) {
+                    Text("Back")
+                        .fontWeight(.medium)
+                        .frame(width: 100)
+                }
+                .buttonStyle(.bordered)
+                
+                Button(action: onNext) {
+                    Text("Next")
+                        .fontWeight(.medium)
+                        .frame(width: 100)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.white)
+                .disabled(outputFolder == nil)
+            }
+            
+            Spacer()
+        }
+        .padding()
+    }
+    
+    private func selectOutputFolder() {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = true
+        panel.prompt = "Choose Output Folder"
+        
+        if panel.runModal() == .OK {
+            outputFolder = panel.url
+        }
+    }
+}
+
+struct ConvertView: View {
+    @Binding var audioFiles: [AudioFile]
+    @Binding var currentStep: ConversionStep
+    let outputFolder: URL?
+    let onBack: () -> Void
+    @State private var isConverting = false
+    @State private var errorMessage: String?
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            // Title
+            Text("Convert Files")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            // Status and progress
+            VStack(spacing: 20) {
+                Image(systemName: "waveform.circle.fill")
+                    .font(.system(size: 40, weight: .ultraLight))
+                
+                if isConverting {
+                    let completed = audioFiles.filter { $0.status == .completed }.count
+                    VStack(spacing: 8) {
+                        Text("Converting files...")
+                            .fontWeight(.medium)
+                        Text("\(completed) of \(audioFiles.count) completed")
+                            .foregroundColor(.gray)
+                        
+                        // Show current file progress
+                        if let converting = audioFiles.first(where: { $0.status == .converting }) {
+                            VStack(spacing: 4) {
+                                Text(converting.url.lastPathComponent)
+                                    .foregroundColor(.gray)
+                                ProgressView(value: converting.progress)
+                                    .progressViewStyle(.linear)
+                                    .frame(width: 200)
+                            }
+                            .padding(.top)
+                        }
+                    }
+                } else {
+                    Text("Ready to convert \(audioFiles.count) files")
+                        .foregroundColor(.gray)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: 200)
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(12)
+            
+            // Buttons
+            if isConverting {
+                Button(action: { /* Show in Finder */ }) {
+                    Text("Show in Finder")
+                        .fontWeight(.medium)
+                        .frame(width: 150)
+                }
+                .buttonStyle(.bordered)
+            } else {
+                HStack(spacing: 20) {
+                    Button(action: onBack) {
+                        Text("Back")
+                            .fontWeight(.medium)
+                            .frame(width: 100)
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button(action: startConversion) {
+                        Text("Start")
+                            .fontWeight(.medium)
+                            .frame(width: 100)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.white)
+                }
+            }
+            
+            Spacer()
+        }
+        .padding()
+    }
+    
+    private func startConversion() {
+        guard let outputFolder = outputFolder else { return }
+        isConverting = true
+        
+        // Start conversion for first pending file
+        Task {
+            await convertNextFile(outputFolder: outputFolder)
+        }
+    }
+    
+    private func convertNextFile(outputFolder: URL) async {
+        // Find first pending file
+        guard let index = audioFiles.firstIndex(where: { $0.status == .pending }) else {
+            isConverting = false
+            // Add this line to transition to completion view
+            currentStep = .completed  // Vi skal passe denne værdi gennem som binding
+            return
+        }
+        
+        // Update file status
+        await MainActor.run {
+            audioFiles[index].status = .converting
+        }
+        
+        // Get input and output URLs
+        let inputURL = audioFiles[index].url
+        let outputURL = outputFolder.appendingPathComponent(inputURL.lastPathComponent)
+            .deletingPathExtension()
+            .appendingPathExtension("Mono")
+            .appendingPathExtension("wav")
+        
+        do {
+            try await convertFile(at: index, from: inputURL, to: outputURL)
+            
+            await MainActor.run {
+                audioFiles[index].status = .completed
+                // Continue with next file
+                Task {
+                    await convertNextFile(outputFolder: outputFolder)
+                }
+            }
+        } catch {
+            await MainActor.run {
+                audioFiles[index].status = .failed
+                audioFiles[index].errorMessage = error.localizedDescription
+                errorMessage = "Error converting \(inputURL.lastPathComponent): \(error.localizedDescription)"
+                
+                // Continue with next file despite error
+                Task {
+                    await convertNextFile(outputFolder: outputFolder)
+                }
+            }
+        }
+    }
+    
+    private func convertFile(at index: Int, from inputURL: URL, to outputURL: URL) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            do {
+                try convertAudioFile(
+                    inputURL: inputURL,
+                    outputURL: outputURL,
+                    updateProgress: { progress in
+                        Task { @MainActor in
+                            audioFiles[index].progress = progress
+                        }
+                    }
+                )
+                continuation.resume()
+            } catch {
+                continuation.resume(throwing: error)
+            }
+        }
+    }
+    
+    private func showInFinder() {
+        guard let outputFolder = outputFolder else { return }
+        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: outputFolder.path)
+    }
+}
+
+struct CompletionView: View {
+    let audioFiles: [AudioFile]
+    let outputFolder: URL?
+    let onStartOver: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            // Success icon
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 50, weight: .ultraLight))
+            
+            // Stats
+            VStack(spacing: 10) {
+                Text("Conversion Complete!")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                let successful = audioFiles.filter { $0.status == .completed }.count
+                let failed = audioFiles.filter { $0.status == .failed }.count
+                
+                Text("\(successful) files converted successfully")
+                    .foregroundColor(.gray)
+                
+                if failed > 0 {
+                    Text("\(failed) files failed")
+                        .foregroundColor(.red)
+                }
+            }
+            
+            // Action buttons
+            VStack(spacing: 15) {
+                Button(action: {
+                    guard let outputFolder = outputFolder else { return }
+                    NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: outputFolder.path)
+                }) {
+                    Label("Show in Finder", systemImage: "folder")
+                        .frame(width: 200)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.white)
+                
+                Button(action: onStartOver) {
+                    Label("Convert More Files", systemImage: "arrow.clockwise")
+                        .frame(width: 200)
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding(.top)
+            
+            Spacer()
+        }
+        .padding()
     }
 }
