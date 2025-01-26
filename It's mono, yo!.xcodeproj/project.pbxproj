@@ -28,9 +28,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3BDF76072D1F625D00189ABE /* SampleDrumConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleDrumConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3BDF76082D1F625D00189ABE /* SampleDrumConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleDrumConverterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3BDF76092D1F625D00189ABE /* SampleDrumConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleDrumConverterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BDF76072D1F625D00189ABE /* It's mono, yo!.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "It's mono, yo!.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BDF76082D1F625D00189ABE /* It's mono, yo!Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "It's mono, yo!Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BDF76092D1F625D00189ABE /* It's mono, yo!UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "It's mono, yo!UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -83,18 +83,18 @@
 				3B469F192D1E18C2004E5EDE /* SampleDrumConverter */,
 				3B469F2B2D1E18C4004E5EDE /* SampleDrumConverterTests */,
 				3B469F352D1E18C4004E5EDE /* SampleDrumConverterUITests */,
-				3BDF76072D1F625D00189ABE /* SampleDrumConverter.app */,
-				3BDF76082D1F625D00189ABE /* SampleDrumConverterTests.xctest */,
-				3BDF76092D1F625D00189ABE /* SampleDrumConverterUITests.xctest */,
+				3BDF76072D1F625D00189ABE /* It's mono, yo!.app */,
+				3BDF76082D1F625D00189ABE /* It's mono, yo!Tests.xctest */,
+				3BDF76092D1F625D00189ABE /* It's mono, yo!UITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3B469F162D1E18C2004E5EDE /* SampleDrumConverter */ = {
+		3B469F162D1E18C2004E5EDE /* It's mono, yo! */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3B469F3C2D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "SampleDrumConverter" */;
+			buildConfigurationList = 3B469F3C2D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "It's mono, yo!" */;
 			buildPhases = (
 				3B469F132D1E18C2004E5EDE /* Sources */,
 				3B469F142D1E18C2004E5EDE /* Frameworks */,
@@ -107,17 +107,17 @@
 			fileSystemSynchronizedGroups = (
 				3B469F192D1E18C2004E5EDE /* SampleDrumConverter */,
 			);
-			name = SampleDrumConverter;
+			name = "It's mono, yo!";
 			packageProductDependencies = (
 				3BDF761B2D1F6CA900189ABE /* AudioKit */,
 			);
 			productName = SampleDrumConverter;
-			productReference = 3BDF76072D1F625D00189ABE /* SampleDrumConverter.app */;
+			productReference = 3BDF76072D1F625D00189ABE /* It's mono, yo!.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3B469F272D1E18C4004E5EDE /* SampleDrumConverterTests */ = {
+		3B469F272D1E18C4004E5EDE /* It's mono, yo!Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3B469F3F2D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "SampleDrumConverterTests" */;
+			buildConfigurationList = 3B469F3F2D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "It's mono, yo!Tests" */;
 			buildPhases = (
 				3B469F242D1E18C4004E5EDE /* Sources */,
 				3B469F252D1E18C4004E5EDE /* Frameworks */,
@@ -131,16 +131,16 @@
 			fileSystemSynchronizedGroups = (
 				3B469F2B2D1E18C4004E5EDE /* SampleDrumConverterTests */,
 			);
-			name = SampleDrumConverterTests;
+			name = "It's mono, yo!Tests";
 			packageProductDependencies = (
 			);
 			productName = SampleDrumConverterTests;
-			productReference = 3BDF76082D1F625D00189ABE /* SampleDrumConverterTests.xctest */;
+			productReference = 3BDF76082D1F625D00189ABE /* It's mono, yo!Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		3B469F312D1E18C4004E5EDE /* SampleDrumConverterUITests */ = {
+		3B469F312D1E18C4004E5EDE /* It's mono, yo!UITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3B469F422D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "SampleDrumConverterUITests" */;
+			buildConfigurationList = 3B469F422D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "It's mono, yo!UITests" */;
 			buildPhases = (
 				3B469F2E2D1E18C4004E5EDE /* Sources */,
 				3B469F2F2D1E18C4004E5EDE /* Frameworks */,
@@ -154,11 +154,11 @@
 			fileSystemSynchronizedGroups = (
 				3B469F352D1E18C4004E5EDE /* SampleDrumConverterUITests */,
 			);
-			name = SampleDrumConverterUITests;
+			name = "It's mono, yo!UITests";
 			packageProductDependencies = (
 			);
 			productName = SampleDrumConverterUITests;
-			productReference = 3BDF76092D1F625D00189ABE /* SampleDrumConverterUITests.xctest */;
+			productReference = 3BDF76092D1F625D00189ABE /* It's mono, yo!UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -184,7 +184,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3B469F122D1E18C2004E5EDE /* Build configuration list for PBXProject "SampleDrumConverter" */;
+			buildConfigurationList = 3B469F122D1E18C2004E5EDE /* Build configuration list for PBXProject "It's mono, yo!" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -201,9 +201,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3B469F162D1E18C2004E5EDE /* SampleDrumConverter */,
-				3B469F272D1E18C4004E5EDE /* SampleDrumConverterTests */,
-				3B469F312D1E18C4004E5EDE /* SampleDrumConverterUITests */,
+				3B469F162D1E18C2004E5EDE /* It's mono, yo! */,
+				3B469F272D1E18C4004E5EDE /* It's mono, yo!Tests */,
+				3B469F312D1E18C4004E5EDE /* It's mono, yo!UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -259,12 +259,12 @@
 /* Begin PBXTargetDependency section */
 		3B469F2A2D1E18C4004E5EDE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3B469F162D1E18C2004E5EDE /* SampleDrumConverter */;
+			target = 3B469F162D1E18C2004E5EDE /* It's mono, yo! */;
 			targetProxy = 3B469F292D1E18C4004E5EDE /* PBXContainerItemProxy */;
 		};
 		3B469F342D1E18C4004E5EDE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3B469F162D1E18C2004E5EDE /* SampleDrumConverter */;
+			target = 3B469F162D1E18C2004E5EDE /* It's mono, yo! */;
 			targetProxy = 3B469F332D1E18C4004E5EDE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -460,7 +460,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SampleDrumConverter.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SampleDrumConverter";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/It's mono, yo!.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/It's mono, yo!";
 			};
 			name = Debug;
 		};
@@ -478,7 +478,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SampleDrumConverter.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SampleDrumConverter";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/It's mono, yo!.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/It's mono, yo!";
 			};
 			name = Release;
 		};
@@ -517,7 +517,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3B469F122D1E18C2004E5EDE /* Build configuration list for PBXProject "SampleDrumConverter" */ = {
+		3B469F122D1E18C2004E5EDE /* Build configuration list for PBXProject "It's mono, yo!" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3B469F3A2D1E18C4004E5EDE /* Debug */,
@@ -526,7 +526,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3B469F3C2D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "SampleDrumConverter" */ = {
+		3B469F3C2D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "It's mono, yo!" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3B469F3D2D1E18C4004E5EDE /* Debug */,
@@ -535,7 +535,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3B469F3F2D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "SampleDrumConverterTests" */ = {
+		3B469F3F2D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "It's mono, yo!Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3B469F402D1E18C4004E5EDE /* Debug */,
@@ -544,7 +544,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3B469F422D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "SampleDrumConverterUITests" */ = {
+		3B469F422D1E18C4004E5EDE /* Build configuration list for PBXNativeTarget "It's mono, yo!UITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3B469F432D1E18C4004E5EDE /* Debug */,

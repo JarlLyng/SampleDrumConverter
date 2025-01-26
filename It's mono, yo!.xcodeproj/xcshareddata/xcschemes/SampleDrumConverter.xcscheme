@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3B469F162D1E18C2004E5EDE"
-               BuildableName = "SampleDrumConverter.app"
-               BlueprintName = "SampleDrumConverter"
-               ReferencedContainer = "container:SampleDrumConverter.xcodeproj">
+               BuildableName = "It&apos;s mono, yo!.app"
+               BlueprintName = "It&apos;s mono, yo!"
+               ReferencedContainer = "container:It&apos;s mono, yo!.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,9 +36,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3B469F272D1E18C4004E5EDE"
-               BuildableName = "SampleDrumConverterTests.xctest"
-               BlueprintName = "SampleDrumConverterTests"
-               ReferencedContainer = "container:SampleDrumConverter.xcodeproj">
+               BuildableName = "It&apos;s mono, yo!Tests.xctest"
+               BlueprintName = "It&apos;s mono, yo!Tests"
+               ReferencedContainer = "container:It&apos;s mono, yo!.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3B469F312D1E18C4004E5EDE"
-               BuildableName = "SampleDrumConverterUITests.xctest"
-               BlueprintName = "SampleDrumConverterUITests"
-               ReferencedContainer = "container:SampleDrumConverter.xcodeproj">
+               BuildableName = "It&apos;s mono, yo!UITests.xctest"
+               BlueprintName = "It&apos;s mono, yo!UITests"
+               ReferencedContainer = "container:It&apos;s mono, yo!.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -69,9 +69,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3B469F162D1E18C2004E5EDE"
-            BuildableName = "SampleDrumConverter.app"
-            BlueprintName = "SampleDrumConverter"
-            ReferencedContainer = "container:SampleDrumConverter.xcodeproj">
+            BuildableName = "It&apos;s mono, yo!.app"
+            BlueprintName = "It&apos;s mono, yo!"
+            ReferencedContainer = "container:It&apos;s mono, yo!.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -86,9 +86,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3B469F162D1E18C2004E5EDE"
-            BuildableName = "SampleDrumConverter.app"
-            BlueprintName = "SampleDrumConverter"
-            ReferencedContainer = "container:SampleDrumConverter.xcodeproj">
+            BuildableName = "It&apos;s mono, yo!.app"
+            BlueprintName = "It&apos;s mono, yo!"
+            ReferencedContainer = "container:It&apos;s mono, yo!.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

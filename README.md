@@ -1,4 +1,4 @@
-# SampleDrumConverter
+# It's Mono, Yo!
 
 A macOS application for batch converting WAV audio files to mono format while preserving original sample rates.
 
