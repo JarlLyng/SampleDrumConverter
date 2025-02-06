@@ -1,6 +1,14 @@
 # It's mono, yo!
 
-A macOS application for batch converting WAV audio files to mono format while preserving original sample rates. Perfect for preparing samples for hardware like the Erica Synths Sample Drum module.
+![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
+![Release](https://img.shields.io/github/v/release/JarlLyng/SampleDrumConverter)
+![License](https://img.shields.io/github/license/JarlLyng/SampleDrumConverter)
+
+A macOS application for batch converting WAV audio files to mono format while preserving original sample rates.
+
+![App Screenshot](screenshots/Screenshot.png)
+
+Perfect for preparing samples for hardware like the Erica Synths Sample Drum module.
 
 ## Features
 
