@@ -3,8 +3,11 @@
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
 ![Release](https://img.shields.io/github/v/release/JarlLyng/SampleDrumConverter)
 ![License](https://img.shields.io/github/license/JarlLyng/SampleDrumConverter)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fjarllyng.github.io%2FSampleDrumConverter)
 
 A macOS application for batch converting WAV audio files to mono format while preserving original sample rates.
+
+[🌐 Visit Website](https://jarllyng.github.io/SampleDrumConverter) | [⬇️ Download Latest Release](https://github.com/JarlLyng/SampleDrumConverter/releases/latest)
 
 ![App Screenshot](screenshots/Screenshot.png)
 
