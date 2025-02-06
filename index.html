@@ -5,83 +5,210 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>It's mono, yo! - WAV to Mono Converter for macOS</title>
     <style>
+        :root {
+            --primary-color: #000;
+            --accent-color: #0066cc;
+            --bg-color: #f5f5f7;
+            --text-color: #1d1d1f;
+            --section-bg: #ffffff;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
-            max-width: 800px;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            background: var(--bg-color);
+        }
+
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            background: #f5f5f7;
+            padding: 0 20px;
         }
+
         .hero {
+            background: var(--primary-color);
+            color: white;
+            padding: 80px 0;
             text-align: center;
-            padding: 40px 0;
         }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
         .hero img {
-            max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 90%;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            margin: 40px auto;
+            display: block;
+            transition: transform 0.3s ease;
         }
+
+        .hero img:hover {
+            transform: translateY(-5px);
+        }
+
         .download-button {
             display: inline-block;
-            background: #000;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 6px;
+            background: var(--accent-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
             text-decoration: none;
-            margin: 20px 0;
             font-weight: 500;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
         }
+
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 40px 0;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 80px 20px;
+            background: var(--section-bg);
         }
+
         .feature {
+            text-align: center;
+            padding: 40px;
+            border-radius: 12px;
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature h3 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .info-section {
+            padding: 80px 20px;
+            background: var(--bg-color);
+        }
+
+        .info-section h2 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .requirements {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .requirements ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .requirements li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1em;
+        }
+
+        .requirements li:last-child {
+            border-bottom: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="hero">
-        <h1>It's mono, yo!</h1>
-        <p>Convert your WAV files to mono format while preserving sample rates</p>
-        <img src="screenshots/Screenshot.png" alt="App Screenshot">
-        <br>
-        <a href="https://github.com/JarlLyng/SampleDrumConverter/releases/latest" class="download-button">Download Latest Version</a>
+        <div class="container">
+            <h1>It's mono, yo!</h1>
+            <p>The elegant way to convert your WAV files to mono while preserving sample rates</p>
+            <img src="screenshots/Screenshot.png" alt="App Screenshot">
+            <a href="https://github.com/JarlLyng/SampleDrumConverter/releases/latest" class="download-button">Download Latest Version</a>
+        </div>
     </div>
 
-    <div class="features">
+    <div class="features container">
         <div class="feature">
             <h3>Batch Processing</h3>
-            <p>Convert multiple files at once with progress tracking for each file</p>
+            <p>Convert multiple files simultaneously with real-time progress tracking for each file</p>
         </div>
         <div class="feature">
             <h3>Sample Rate Preservation</h3>
-            <p>Maintains original sample rates for highest quality output</p>
+            <p>Maintains original sample rates for the highest quality output possible</p>
         </div>
         <div class="feature">
-            <h3>Dark Mode</h3>
-            <p>Beautiful dark interface that's easy on the eyes</p>
+            <h3>Dark Mode Interface</h3>
+            <p>Beautiful dark interface designed for long sessions and visual comfort</p>
         </div>
     </div>
 
-    <h2>Perfect for Hardware Samplers</h2>
-    <p>Designed specifically for preparing samples for hardware like the Erica Synths Sample Drum module, which requires mono files.</p>
-
-    <h2>System Requirements</h2>
-    <ul>
-        <li>macOS 11.0 or later</li>
-        <li>64-bit processor</li>
-    </ul>
+    <div class="info-section">
+        <div class="container">
+            <h2>Perfect for Hardware Samplers</h2>
+            <div class="requirements">
+                <p>Specifically designed for preparing samples for hardware like the Erica Synths Sample Drum module and other equipment that requires mono files.</p>
+                
+                <h3>System Requirements</h3>
+                <ul>
+                    <li>macOS 11.0 or later</li>
+                    <li>64-bit processor</li>
+                    <li>WAV file format support</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
     <footer>
-        <p>Created by <a href="https://github.com/JarlLyng">Jarl Lyng</a></p>
+        <div class="container">
+            <p>Created with ♥️ by <a href="https://github.com/JarlLyng">Jarl Lyng</a></p>
+        </div>
     </footer>
 </body>
 </html> 
