@@ -8,14 +8,17 @@
 import XCTest
 
 final class SampleDrumConverterUITests: XCTestCase {
-
+    var app: XCUIApplication!
+    
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
 
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        // In UI tests it's important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        app = XCUIApplication()
+        app.launch()
     }
 
     override func tearDownWithError() throws {
@@ -39,5 +42,29 @@ final class SampleDrumConverterUITests: XCTestCase {
                 XCUIApplication().launch()
             }
         }
+    }
+
+    func testFileSelection() throws {
+        // Test file selection button exists
+        XCTAssertTrue(app.buttons["Select WAV Files"].exists)
+        
+        // Note: Can't test actual file selection due to system dialog limitations
+    }
+    
+    func testNavigationFlow() throws {
+        // Test initial state
+        XCTAssertTrue(app.staticTexts["Select WAV Files"].exists)
+        
+        // Test navigation buttons
+        let nextButton = app.buttons["Next"]
+        XCTAssertFalse(nextButton.isEnabled) // Should be disabled without files
+    }
+    
+    func testErrorStates() throws {
+        // Test error message display
+        // Note: Need to trigger error conditions programmatically
+        
+        // Test retry functionality
+        XCTAssertTrue(app.buttons["Try Again"].exists)
     }
 }
