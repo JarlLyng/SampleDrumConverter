@@ -36,6 +36,50 @@ Perfect for preparing samples for hardware like the Erica Synths Sample Drum mod
 - Maximum file size: 100 MB per file
 - Up to 50 files can be converted in one batch
 
+## Technical Architecture
+
+### Core Components
+
+- **Audio Processing Engine**
+  - Uses AVFoundation for WAV file handling
+  - Maintains original sample rates during conversion
+  - Processes files in chunks to optimize memory usage
+
+- **UI Layer**
+  - Built with SwiftUI
+  - MVVM-inspired architecture
+  - Responsive design adapting to window size
+  - Theme system with support for multiple themes
+
+### Key Features Implementation
+
+- **File Processing**
+  - Asynchronous file conversion using Swift concurrency
+  - Progress tracking with real-time updates
+  - Error handling with retry capability
+
+- **State Management**
+  - Step-based conversion flow
+  - File status tracking
+  - Theme persistence
+
+### Data Flow
+
+1. File Selection
+   - File validation
+   - Format detection
+   - Status initialization
+
+2. Conversion Process
+   - Chunk-based processing
+   - Progress updates
+   - Error handling
+
+3. Output Generation
+   - Maintains file structure
+   - Automatic mono conversion
+   - Original sample rate preservation
+
 ## Installation
 
 ### Download from GitHub

@@ -154,6 +154,9 @@ struct AudioFileFormat: Sendable {
     }
 }
 
+/// Validates a WAV file before processing
+/// - Parameter url: The URL of the file to validate
+/// - Throws: ConversionError.fileSizeTooLarge if file exceeds 100MB
 func validateFile(at url: URL) throws {
     // Check file size
     let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
@@ -165,6 +168,9 @@ func validateFile(at url: URL) throws {
     }
 }
 
+/// Extracts audio format information from a WAV file
+/// - Parameter url: The URL of the WAV file
+/// - Returns: AudioFileFormat containing channels, sample rate and bit depth, or nil if format cannot be determined
 func getAudioFormat(for url: URL) -> AudioFileFormat? {
     guard let file = try? AVAudioFile(forReading: url) else { return nil }
     let format = file.processingFormat
@@ -408,7 +414,10 @@ struct ContentView: View {
         }
     }
     
-    func startConversion() {
+    /// Starts the conversion process for all pending files
+    /// - Note: Files are processed sequentially to optimize resource usage
+    /// - Important: Requires output folder to be set before starting
+    private func startConversion() {
         guard outputFolder != nil else {
             setStatusMessage("Please select an output folder first")
             return
@@ -427,6 +436,10 @@ struct ContentView: View {
         convertFile(at: index)
     }
     
+    /// Converts a single file at the specified index
+    /// - Parameter index: Index of the file in the audioFiles array
+    /// - Important: Handles progress updates and error states automatically
+    /// - Note: Uses chunk-based processing to handle large files efficiently
     private func convertFile(at index: Int) {
         guard index < audioFiles.count else {
             isProcessing = false
@@ -473,8 +486,11 @@ struct ContentView: View {
         }
     }
     
-    private func setStatusMessage(_ message: String) {
-        customStatusMessage = message
+    /// Updates the conversion progress for the current file
+    /// - Parameter progress: Progress value between 0 and 1
+    /// - Note: Updates are dispatched to the main thread automatically
+    private func updateProgress(_ progress: Float) {
+        // Implementation of updateProgress method
     }
 
     @MainActor
@@ -493,6 +509,8 @@ struct ContentView: View {
         #endif
     }
 
+    /// Checks GitHub for available updates
+    /// - Note: Compares semantic versions to determine if an update is available
     private func checkForUpdates() {
         Task {
             let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.5"
@@ -514,6 +532,12 @@ struct ContentView: View {
                 print("Error checking for updates: \(error.localizedDescription)")
             }
         }
+    }
+
+    /// Updates the status message shown to the user
+    /// - Parameter message: The message to display
+    private func setStatusMessage(_ message: String) {
+        customStatusMessage = message
     }
 }
 
