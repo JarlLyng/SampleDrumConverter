@@ -3,6 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Convert WAV files to mono format with this elegant macOS app. Perfect for Erica Synths Sample Drum and other hardware samplers. Features drag & drop, dark mode, and batch processing.">
+    <meta name="keywords" content="WAV converter, mono converter, sample drum, erica synths, macos app, audio converter">
+    <meta name="author" content="Jarl Lyng">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="It's mono, yo! - WAV to Mono Converter for macOS">
+    <meta property="og:description" content="Convert WAV files to mono format with this elegant macOS app. Perfect for hardware samplers.">
+    <meta property="og:image" content="https://jarllyng.github.io/SampleDrumConverter/screenshots/Screenshot.png">
+    <meta property="og:url" content="https://jarllyng.github.io/SampleDrumConverter">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="It's mono, yo! - WAV to Mono Converter">
+    <meta name="twitter:description" content="Convert WAV files to mono format with this elegant macOS app">
+    <meta name="twitter:image" content="https://jarllyng.github.io/SampleDrumConverter/screenshots/Screenshot.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    
     <title>It's mono, yo! - WAV to Mono Converter for macOS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -32,153 +52,213 @@
             }
         }
     </script>
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://jarllyng.github.io/SampleDrumConverter">
+    
+    <!-- More meta tags -->
+    <meta name="robots" content="index, follow">
+    <meta name="application-name" content="It's mono, yo!">
+    <meta name="apple-mobile-web-app-title" content="It's mono, yo!">
+    
+    <!-- Cache control -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-    <!-- Navigation -->
-    <nav class="fixed w-full bg-white dark:bg-gray-800 shadow-md z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="text-xl font-bold text-gray-800 dark:text-white">It's mono, yo!</div>
-            <div class="flex items-center space-x-4">
-                <button onclick="toggleDarkMode()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <i class="fas fa-moon dark:hidden"></i>
-                    <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
-                </button>
-                <a href="https://github.com/JarlLyng/SampleDrumConverter" 
-                   class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-700 text-white hover:bg-gray-800">
-                    <i class="fab fa-github"></i>
-                    <span>GitHub</span>
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <div class="pt-16">
-        <div class="bg-black text-white py-20">
-            <div class="container mx-auto px-4 text-center">
-                <h1 class="text-5xl font-bold mb-6">It's mono, yo!</h1>
-                <p class="text-xl mb-12 max-w-2xl mx-auto">
-                    The elegant way to convert your WAV files to mono while preserving sample rates
-                </p>
-                <div class="relative group">
-                    <img src="screenshots/Screenshot.png" alt="App Screenshot" 
-                         class="rounded-xl shadow-2xl mx-auto max-w-4xl w-full transform transition-transform duration-300 group-hover:-translate-y-2">
-                    <div class="absolute inset-0 rounded-xl bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                </div>
-                <div class="mt-12 space-x-4">
-                    <a href="https://github.com/JarlLyng/SampleDrumConverter/releases/latest" 
-                       class="inline-block px-8 py-4 bg-primary text-white rounded-lg font-medium hover:bg-blue-700 transform hover:-translate-y-1 transition-all">
-                        <i class="fas fa-download mr-2"></i>Download Latest Version
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- GitHub Stats -->
-    <div class="py-8 bg-white dark:bg-gray-800">
-        <div class="container mx-auto px-4 text-center">
-            <div class="github-buttons space-x-4">
-                <a class="github-button" href="https://github.com/JarlLyng/SampleDrumConverter" data-size="large" data-show-count="true">Star</a>
-                <a class="github-button" href="https://github.com/JarlLyng/SampleDrumConverter/fork" data-size="large" data-show-count="true">Fork</a>
-                <a class="github-button" href="https://github.com/JarlLyng/SampleDrumConverter/issues" data-size="large" data-show-count="true">Issue</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Features -->
-    <div class="py-20 bg-gray-50 dark:bg-gray-900">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                    <div class="text-primary text-4xl mb-4">
-                        <i class="fas fa-hand-pointer"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4 dark:text-white">Drag & Drop</h3>
-                    <p class="text-gray-600 dark:text-gray-300">Simply drag your WAV files directly into the app</p>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                    <div class="text-primary text-4xl mb-4">
-                        <i class="fas fa-paint-brush"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4 dark:text-white">Modern Theme</h3>
-                    <p class="text-gray-600 dark:text-gray-300">Choose between classic and modern dark themes</p>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                    <div class="text-primary text-4xl mb-4">
-                        <i class="fas fa-layer-group"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4 dark:text-white">Batch Processing</h3>
-                    <p class="text-gray-600 dark:text-gray-300">Convert multiple files simultaneously with real-time progress tracking</p>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                    <div class="text-primary text-4xl mb-4">
-                        <i class="fas fa-keyboard"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4 dark:text-white">Keyboard Shortcuts</h3>
-                    <p class="text-gray-600 dark:text-gray-300">Quick access with ⌘O and ESC shortcuts</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Requirements -->
-    <div class="py-20 bg-white dark:bg-gray-800">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 dark:text-white">Perfect for Hardware Samplers</h2>
-            <div class="max-w-2xl mx-auto bg-gray-50 dark:bg-gray-700 p-8 rounded-xl shadow-lg">
-                <p class="text-gray-700 dark:text-gray-200 mb-8">
-                    Specifically designed for preparing samples for hardware like the Erica Synths Sample Drum module 
-                    and other equipment that requires mono files.
-                </p>
-                <h3 class="text-xl font-bold mb-4 dark:text-white">System Requirements</h3>
-                <ul class="space-y-3">
-                    <li class="flex items-center text-gray-700 dark:text-gray-200">
-                        <i class="fas fa-check text-green-500 mr-2"></i>
-                        macOS 11.0 or later
-                    </li>
-                    <li class="flex items-center text-gray-700 dark:text-gray-200">
-                        <i class="fas fa-check text-green-500 mr-2"></i>
-                        64-bit processor
-                    </li>
-                    <li class="flex items-center text-gray-700 dark:text-gray-200">
-                        <i class="fas fa-check text-green-500 mr-2"></i>
-                        WAV file format support
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <h3 class="text-xl font-bold mb-4">Quick Links</h3>
-                <ul class="space-y-2">
-                    <li><a href="https://github.com/JarlLyng/SampleDrumConverter" class="hover:text-primary">GitHub Repository</a></li>
-                    <li><a href="https://github.com/JarlLyng/SampleDrumConverter/releases" class="hover:text-primary">Latest Release</a></li>
-                    <li><a href="https://github.com/JarlLyng/SampleDrumConverter/issues" class="hover:text-primary">Report an Issue</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold mb-4">Resources</h3>
-                <ul class="space-y-2">
-                    <li><a href="https://github.com/JarlLyng/SampleDrumConverter#readme" class="hover:text-primary">Documentation</a></li>
-                    <li><a href="https://github.com/JarlLyng/SampleDrumConverter/blob/main/LICENSE" class="hover:text-primary">License</a></li>
-                    <li><a href="https://github.com/JarlLyng/SampleDrumConverter/releases/latest" class="hover:text-primary">Download</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold mb-4">Connect</h3>
-                <p class="mb-4">Created with ♥️ by Jarl Lyng</p>
-                <div class="flex space-x-4">
-                    <a href="https://github.com/JarlLyng" class="text-2xl hover:text-primary">
+    <main>
+        <!-- Navigation -->
+        <nav class="fixed w-full bg-white dark:bg-gray-800 shadow-md z-50">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="text-xl font-bold text-gray-800 dark:text-white">It's mono, yo!</div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleDarkMode()" 
+                            aria-label="Toggle dark mode"
+                            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+                    <a href="https://github.com/JarlLyng/SampleDrumConverter" 
+                       class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-700 text-white hover:bg-gray-800">
                         <i class="fab fa-github"></i>
+                        <span>GitHub</span>
                     </a>
                 </div>
             </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="pt-16" aria-label="Introduction">
+            <div class="bg-black text-white py-20">
+                <div class="container mx-auto px-4 text-center">
+                    <h1 class="text-5xl font-bold mb-6">It's mono, yo!</h1>
+                    <p class="text-xl mb-12 max-w-2xl mx-auto">
+                        The elegant way to convert your WAV files to mono while preserving sample rates
+                    </p>
+                    <div class="relative group">
+                        <img src="screenshots/Screenshot.png" 
+                             alt="It's mono, yo! app interface showing WAV file conversion process" 
+                             loading="lazy"
+                             class="rounded-xl shadow-2xl mx-auto max-w-4xl w-full transform transition-transform duration-300 group-hover:-translate-y-2">
+                        <div class="absolute inset-0 rounded-xl bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <div class="mt-12 space-x-4">
+                        <a href="https://github.com/JarlLyng/SampleDrumConverter/releases/latest" 
+                           class="inline-block px-8 py-4 bg-primary text-white rounded-lg font-medium 
+                                  hover:bg-blue-700 transform hover:-translate-y-1 hover:shadow-lg 
+                                  transition-all duration-300 ease-in-out">
+                            <i class="fas fa-download mr-2"></i>Download Latest Version
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What's New -->
+        <div class="py-16 bg-gradient-to-b from-black to-gray-900">
+            <div class="container mx-auto px-4 text-center">
+                <span class="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full mb-4">New in Version 1.0.6</span>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+                    <div class="text-white">
+                        <i class="fas fa-hand-pointer text-2xl mb-3 text-primary"></i>
+                        <h3 class="font-medium">Drag & Drop</h3>
+                    </div>
+                    <div class="text-white">
+                        <i class="fas fa-paint-brush text-2xl mb-3 text-primary"></i>
+                        <h3 class="font-medium">Modern Theme</h3>
+                    </div>
+                    <div class="text-white">
+                        <i class="fas fa-keyboard text-2xl mb-3 text-primary"></i>
+                        <h3 class="font-medium">Shortcuts</h3>
+                    </div>
+                    <div class="text-white">
+                        <i class="fas fa-arrows-alt text-2xl mb-3 text-primary"></i>
+                        <h3 class="font-medium">Responsive</h3>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
+
+        <!-- GitHub Stats -->
+        <div class="py-8 bg-white dark:bg-gray-800">
+            <div class="container mx-auto px-4 text-center">
+                <div class="github-buttons space-x-4">
+                    <a class="github-button" href="https://github.com/JarlLyng/SampleDrumConverter" data-size="large" data-show-count="true">Star</a>
+                    <a class="github-button" href="https://github.com/JarlLyng/SampleDrumConverter/fork" data-size="large" data-show-count="true">Fork</a>
+                    <a class="github-button" href="https://github.com/JarlLyng/SampleDrumConverter/issues" data-size="large" data-show-count="true">Issue</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <section class="py-20" aria-label="Features">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12 dark:text-white">Powerful Features</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-primary text-4xl mb-4">
+                            <i class="fas fa-hand-pointer"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 dark:text-white">Drag & Drop</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Simply drag your WAV files directly into the app</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-primary text-4xl mb-4">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 dark:text-white">Modern Theme</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Choose between classic and modern dark themes</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-primary text-4xl mb-4">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 dark:text-white">Batch Processing</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Convert multiple files simultaneously with real-time progress tracking</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-primary text-4xl mb-4">
+                            <i class="fas fa-keyboard"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 dark:text-white">Keyboard Shortcuts</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Quick access with ⌘O and ESC shortcuts</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Requirements -->
+        <div class="py-20 bg-white dark:bg-gray-800">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12 dark:text-white">Perfect for Hardware Samplers</h2>
+                <div class="max-w-2xl mx-auto bg-gray-50 dark:bg-gray-700 p-8 rounded-xl shadow-lg">
+                    <p class="text-gray-700 dark:text-gray-200 mb-8">
+                        Specifically designed for preparing samples for hardware like the Erica Synths Sample Drum module 
+                        and other equipment that requires mono files.
+                    </p>
+                    <h3 class="text-xl font-bold mb-4 dark:text-white">System Requirements</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center text-gray-700 dark:text-gray-200">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            macOS 11.0 or later
+                        </li>
+                        <li class="flex items-center text-gray-700 dark:text-gray-200">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            64-bit processor
+                        </li>
+                        <li class="flex items-center text-gray-700 dark:text-gray-200">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            WAV file format support
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white py-12">
+            <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://github.com/JarlLyng/SampleDrumConverter" class="hover:text-primary">GitHub Repository</a></li>
+                        <li><a href="https://github.com/JarlLyng/SampleDrumConverter/releases" class="hover:text-primary">Latest Release</a></li>
+                        <li><a href="https://github.com/JarlLyng/SampleDrumConverter/issues" class="hover:text-primary">Report an Issue</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://github.com/JarlLyng/SampleDrumConverter#readme" class="hover:text-primary">Documentation</a></li>
+                        <li><a href="https://github.com/JarlLyng/SampleDrumConverter/blob/main/LICENSE" class="hover:text-primary">License</a></li>
+                        <li><a href="https://github.com/JarlLyng/SampleDrumConverter/releases/latest" class="hover:text-primary">Download</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Connect</h3>
+                    <p class="mb-4">Created with ♥️ by Jarl Lyng</p>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/JarlLyng" class="text-2xl hover:text-primary">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Tilføj struktureret data for software application -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "It's mono, yo!",
+      "operatingSystem": "macOS",
+      "applicationCategory": "Audio Tool",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
 </body>
 </html> 
