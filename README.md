@@ -58,10 +58,23 @@ Perfect for preparing samples for hardware like the Erica Synths Sample Drum mod
 1. Launch the app
 2. Add WAV files:
    - Click the "Select WAV Files" button or use ⌘O
+   - Or drag and drop WAV files directly into the app
    - Select one or more WAV files
 3. Choose output folder
 4. Start conversion
 5. Access converted files directly from the completion screen
+
+## Keyboard Shortcuts
+
+- ⌘O: Open file picker
+- ESC: Go back/cancel
+- More shortcuts coming soon
+
+## Themes
+
+The app comes with two built-in themes:
+- Classic Dark: Simple, elegant dark interface
+- Modern Dark: Rich, gradient-based theme with accent colors
 
 ## Known Issues
 
