@@ -3,8 +3,11 @@
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
 ![Release](https://img.shields.io/github/v/release/JarlLyng/SampleDrumConverter)
 ![License](https://img.shields.io/github/license/JarlLyng/SampleDrumConverter)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fjarllyng.github.io%2FSampleDrumConverter)
 
 A macOS application for batch converting WAV audio files to mono format while preserving original sample rates.
+
+[🌐 Visit Website](https://jarllyng.github.io/SampleDrumConverter) | [⬇️ Download Latest Release](https://github.com/JarlLyng/SampleDrumConverter/releases/latest)
 
 ![App Screenshot](screenshots/Screenshot.png)
 
@@ -16,11 +19,14 @@ Perfect for preparing samples for hardware like the Erica Synths Sample Drum mod
 - Preserves original sample rate
 - Progress tracking for each file
 - Error handling with retry option
-- Keyboard shortcuts for common actions
+- Keyboard shortcuts (⌘O, ESC)
 - Context menu actions for individual files
 - Direct access to converted files in Finder
-- Dark mode interface
+- Dark mode with two themes
 - Step-by-step conversion process
+- Drag and drop support
+- Automatic update checking
+- Responsive design
 
 ## System Requirements
 
@@ -65,7 +71,15 @@ Perfect for preparing samples for hardware like the Erica Synths Sample Drum mod
 
 ## Release Notes
 
-### Version 1.0
+### Version 1.0.6
+- Added drag and drop support
+- Added automatic update checking
+- Added keyboard shortcuts
+- Added modern theme option
+- Improved responsive design
+- Various UI improvements
+
+### Version 1.0.5
 - Initial release
 - Basic stereo to mono conversion
 - Batch processing support

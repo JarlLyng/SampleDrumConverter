@@ -2,6 +2,103 @@ import SwiftUI
 import AudioKit
 import AVFoundation
 import AudioToolbox
+import UniformTypeIdentifiers
+
+class AppTheme {
+    // Colors
+    let background: Color
+    let surface: Color
+    let elevated: Color
+    let overlay: Color
+    let accent: Color
+    
+    // Spacing
+    let spacing = Spacing()
+    
+    // Gradients
+    let backgroundGradient: LinearGradient
+    
+    // Add initializer
+    init(
+        background: Color,
+        surface: Color,
+        elevated: Color,
+        overlay: Color,
+        accent: Color,
+        backgroundGradient: LinearGradient
+    ) {
+        self.background = background
+        self.surface = surface
+        self.elevated = elevated
+        self.overlay = overlay
+        self.accent = accent
+        self.backgroundGradient = backgroundGradient
+    }
+    
+    // Predefined themes
+    static let original = AppTheme(
+        background: .black,
+        surface: .white.opacity(0.05),
+        elevated: .white.opacity(0.08),
+        overlay: .white.opacity(0.12),
+        accent: .white,
+        backgroundGradient: LinearGradient(colors: [.black], startPoint: .top, endPoint: .bottom)
+    )
+    
+    static let modern = AppTheme(
+        background: Color(hex: "1a1b26"),
+        surface: Color(hex: "24283b").opacity(0.95),
+        elevated: Color(hex: "414868").opacity(0.95),
+        overlay: Color(hex: "565f89").opacity(0.95),
+        accent: Color(hex: "7aa2f7"),
+        backgroundGradient: LinearGradient(
+            colors: [
+                Color(hex: "1a1b26"),
+                Color(hex: "24283b")
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    )
+}
+
+// Add Color extension for hex support
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (1, 1, 1, 0)
+        }
+
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue:  Double(b) / 255,
+            opacity: Double(a) / 255
+        )
+    }
+}
+
+struct Spacing {
+    let xxs: CGFloat = 4
+    let xs: CGFloat = 8
+    let sm: CGFloat = 12
+    let md: CGFloat = 16
+    let lg: CGFloat = 24
+    let xl: CGFloat = 32
+    let xxl: CGFloat = 48
+}
 
 struct AudioFile: Identifiable, Sendable {
     let id = UUID()
@@ -110,6 +207,10 @@ struct ContentView: View {
     @State private var isProcessing = false
     @State private var outputFolder: URL?
     @State private var customStatusMessage: String?
+    @State private var currentTheme: AppTheme = .original
+    @State private var showingUpdateAlert = false
+    @State private var latestVersion: String = ""
+    @State private var updateURL: String = ""
     
     private let maxFiles = 50
     private let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -148,26 +249,27 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             // Background
-            Color.black.ignoresSafeArea()
+            currentTheme.backgroundGradient.ignoresSafeArea()
             
-            VStack(spacing: 20) {
+            VStack(spacing: currentTheme.spacing.xl) {  // Using theme spacing
                 // Progress indicators
                 HStack(spacing: 15) {
                     ForEach([ConversionStep.selectFiles, .selectOutput, .convert, .completed], id: \.self) { step in
                         Circle()
-                            .fill(currentStep == step ? Color.white : Color.gray)
+                            .fill(currentStep == step ? .white : .gray)
                             .frame(width: 10, height: 10)
                             .animation(.easeInOut(duration: 0.3), value: currentStep)
                     }
                 }
-                .padding(.top)
+                .padding(.top, currentTheme.spacing.lg)
                 
                 // Current step content
                 switch currentStep {
                 case .selectFiles:
                     SelectFilesView(
                         audioFiles: $audioFiles,
-                        onNext: { withAnimation(.easeInOut) { currentStep = .selectOutput } }
+                        onNext: { withAnimation(.easeInOut) { currentStep = .selectOutput } },
+                        theme: currentTheme  // Pass theme to child view
                     )
                     .transition(.asymmetric(
                         insertion: .move(edge: .trailing),
@@ -211,6 +313,42 @@ struct ContentView: View {
             .foregroundColor(.white)
             .animation(.easeInOut, value: currentStep)
         }
+        // Add theme toggle button for testing
+        .toolbar {
+            ToolbarItem {
+                Menu {
+                    Button(action: checkForUpdates) {
+                        Label("Check for Updates", systemImage: "arrow.triangle.2.circlepath")
+                    }
+                    
+                    Button(action: {
+                        withAnimation {
+                            currentTheme = currentTheme === AppTheme.original ? .modern : .original
+                        }
+                    }) {
+                        Label("Toggle Theme", systemImage: "paintbrush.fill")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
+            }
+        }
+        .alert("Update Available", isPresented: $showingUpdateAlert) {
+            Button("Download") {
+                if let url = URL(string: updateURL) {
+                    NSWorkspace.shared.open(url)
+                }
+            }
+            Button("Later", role: .cancel) { }
+        } message: {
+            Text("Version \(latestVersion) is available.")
+        }
+        .onAppear {
+            checkForUpdates()
+        }
+        // Add keyboard shortcuts
+        .keyboardShortcut("o", modifiers: .command) // Open files
+        .keyboardShortcut(.escape, modifiers: []) // Go back/cancel
     }
 
     private func formatFileSize(_ size: Int64) -> String {
@@ -354,14 +492,38 @@ struct ContentView: View {
         print("[\(Date())] \(message)")
         #endif
     }
+
+    private func checkForUpdates() {
+        Task {
+            let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.5"
+            
+            do {
+                guard let url = URL(string: "https://api.github.com/repos/JarlLyng/SampleDrumConverter/releases/latest") else { return }
+                
+                let (data, _) = try await URLSession.shared.data(from: url)
+                let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
+                
+                if release.tagName.dropFirst() > currentVersion {
+                    await MainActor.run {
+                        latestVersion = String(release.tagName.dropFirst())
+                        updateURL = "https://github.com/JarlLyng/SampleDrumConverter/releases/latest"
+                        showingUpdateAlert = true
+                    }
+                }
+            } catch {
+                print("Error checking for updates: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 // FileRowView til at vise individuelle filer
 struct FileRowView: View {
     let file: AudioFile
+    let onRemove: () -> Void
     var onRetry: (() -> Void)?
     var onReveal: (() -> Void)?
-    var onRemove: (() -> Void)?
+    @State private var isHovering = false
     
     var body: some View {
         HStack(spacing: 12) {
@@ -387,7 +549,14 @@ struct FileRowView: View {
                     .frame(width: 100)
             }
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(Color.white.opacity(isHovering ? 0.08 : 0.03))
+        .cornerRadius(8)
+        .onHover { hovering in
+            isHovering = hovering
+        }
+        .animation(.easeInOut(duration: 0.2), value: isHovering)
         .contextMenu {
             if file.status == .failed {
                 Button(action: { onRetry?() }) {
@@ -400,7 +569,7 @@ struct FileRowView: View {
                 }
             }
             Divider()
-            Button(role: .destructive, action: { onRemove?() }) {
+            Button(role: .destructive, action: { onRemove() }) {
                 Label("Remove", systemImage: "trash")
             }
         }
@@ -601,69 +770,113 @@ enum ConversionError: LocalizedError {
 struct SelectFilesView: View {
     @Binding var audioFiles: [AudioFile]
     let onNext: () -> Void
+    @State private var isDropTargeted = false
+    @State private var isHovering = false
+    let theme: AppTheme
     
     var body: some View {
-        VStack(spacing: 30) {
-            // Title
-            Text("Select WAV Files")
-                .font(.title)
-                .fontWeight(.bold)
-            
-            // Icon and drop zone
-            VStack(spacing: 20) {
-                Image(systemName: "plus.rectangle.fill")
-                    .font(.system(size: 40, weight: .ultraLight))
-                
-                Text("Click to select WAV files\nor drag files here")
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.gray)
-            }
-            .frame(maxWidth: .infinity, maxHeight: 200)
-            .background(Color.white.opacity(0.05))
-            .cornerRadius(12)
-            .onTapGesture(perform: selectFiles)
-            
-            // Selected files list
-            if !audioFiles.isEmpty {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Selected Files:")
-                        .fontWeight(.medium)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: geometry.size.height * 0.05) {  // Relative spacing
+                    // Title
+                    Text("Select WAV Files")
+                        .font(.system(size: min(34, geometry.size.width * 0.05)))
+                        .fontWeight(.bold)
                     
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 4) {
-                            ForEach(audioFiles) { file in
-                                HStack {
-                                    Text(file.url.lastPathComponent)
-                                    Spacer()
-                                    if let format = file.format {
-                                        Text(format.description)
-                                            .foregroundColor(.gray)
+                    // Icon and drop zone
+                    VStack(spacing: geometry.size.height * 0.03) {
+                        Image(systemName: "plus.rectangle.fill")
+                            .font(.system(size: min(40, geometry.size.width * 0.06), weight: .ultraLight))
+                            .foregroundColor(isDropTargeted || isHovering ? .white : .gray)
+                        
+                        Text("Click to select WAV files\nor drag files here")
+                            .font(.system(size: min(16, geometry.size.width * 0.02)))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(isDropTargeted || isHovering ? .white : .gray)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: max(180, geometry.size.height * 0.25))  // Relative height
+                    .background(Color.white.opacity(isDropTargeted || isHovering ? 0.1 : 0.05))
+                    .cornerRadius(16)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color.white.opacity(isDropTargeted || isHovering ? 0.3 : 0.1), lineWidth: 1)
+                    )
+                    .animation(.easeInOut(duration: 0.2), value: isDropTargeted)
+                    .animation(.easeInOut(duration: 0.2), value: isHovering)
+                    .onHover { hovering in
+                        isHovering = hovering
+                    }
+                    .onTapGesture(perform: selectFiles)
+                    .onDrop(of: [.fileURL], isTargeted: .init(get: { isDropTargeted },
+                                                             set: { isDropTargeted = $0 })) { providers in
+                        for provider in providers {
+                            let _ = provider.loadObject(ofClass: URL.self) { url, error in
+                                if let error = error {
+                                    print("Error reading dropped file: \(error.localizedDescription)")
+                                    return
+                                }
+                                
+                                guard let url = url,
+                                      url.pathExtension.lowercased() == "wav" else { return }
+                                
+                                Task { @MainActor in
+                                    do {
+                                        try validateFile(at: url)
+                                        audioFiles.append(AudioFile(url: url, format: getAudioFormat(for: url)))
+                                    } catch {
+                                        print("Error validating dropped file: \(error.localizedDescription)")
+                                    }
+                                }
+                            }
+                        }
+                        return true
+                    }
+                    
+                    // Selected files list
+                    if !audioFiles.isEmpty {
+                        VStack(alignment: .leading, spacing: geometry.size.height * 0.02) {
+                            Text("Selected Files:")
+                                .font(.headline)
+                                .fontWeight(.medium)
+                            
+                            ScrollView {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    ForEach(audioFiles) { file in
+                                        FileRowView(file: file, onRemove: {
+                                            // Handle file removal here
+                                            if let index = audioFiles.firstIndex(where: { $0.id == file.id }) {
+                                                audioFiles.remove(at: index)
+                                            }
+                                        })
                                     }
                                 }
                                 .padding(.vertical, 4)
                             }
+                            .frame(maxHeight: geometry.size.height * 0.4)  // Relative height
                         }
+                        .padding(20)
+                        .background(Color.white.opacity(0.05))
+                        .cornerRadius(16)
                     }
-                    .frame(maxHeight: 200)
+                    
+                    // Next button with hover
+                    Button(action: onNext) {
+                        Text("Next")
+                            .fontWeight(.medium)
+                            .frame(width: min(120, geometry.size.width * 0.15),
+                                   height: min(36, geometry.size.height * 0.06))
+                    }
+                    .buttonStyle(HoverButtonStyle())  // Custom button style
+                    .disabled(audioFiles.isEmpty)
+                    .opacity(audioFiles.isEmpty ? 0.5 : 1.0)
+                    .animation(.easeInOut, value: audioFiles.isEmpty)
+                    
+                    Spacer(minLength: 0)
                 }
-                .padding()
-                .background(Color.white.opacity(0.05))
-                .cornerRadius(12)
+                .padding(min(24, geometry.size.width * 0.03))
             }
-            
-            // Next button
-            Button(action: onNext) {
-                Text("Next")
-                    .fontWeight(.medium)
-                    .frame(width: 100)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.white)
-            .disabled(audioFiles.isEmpty)
-            
-            Spacer()
         }
-        .padding()
     }
     
     private func selectFiles() {
@@ -684,6 +897,23 @@ struct SelectFilesView: View {
             }
             audioFiles.append(contentsOf: newFiles)
         }
+    }
+}
+
+// Add this custom button style
+struct HoverButtonStyle: ButtonStyle {
+    @State private var isHovering = false
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .background(configuration.isPressed ? Color.white.opacity(0.2) : 
+                        isHovering ? Color.white.opacity(0.15) : Color.white.opacity(0.1))
+            .cornerRadius(8)
+            .onHover { hovering in
+                isHovering = hovering
+            }
+            .animation(.easeInOut(duration: 0.2), value: isHovering)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 
@@ -972,5 +1202,13 @@ struct CompletionView: View {
             Spacer()
         }
         .padding()
+    }
+}
+
+struct GitHubRelease: Codable {
+    let tagName: String
+    
+    enum CodingKeys: String, CodingKey {
+        case tagName = "tag_name"
     }
 }
